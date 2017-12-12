@@ -1,11 +1,32 @@
 #include"llist.h"
 void main(void) {
-	LinkList L=NULL;
+	int L_all = 0;//已加载数据的表数
+	int L_cur = 0;//当前操作的表的编号
 	int op = 1;
 	char filename[40];
+	MakeEmpty(lists_l);
 	while (op) {
 		system("cls");	
-		
+		if (L_all == 0)
+		{
+			printf("当前没有表可进行操作，请创建新表！\n");
+		}
+		else
+		{	
+			printf("已加载的表有：");
+			for (int i = 0; i < 100; i++)
+			{
+				if (lists_l[i] != NULL)printf("%d ", i + 1);
+			}
+			if (L_cur == 0)
+			{
+				printf("\n请选择已有的表！\n");
+			}
+			else
+			{
+				printf("\n当前操作的表为第%d张表", L_cur);
+			}
+		}
 		printf("\n\n");
 		printf("      Menu for Linear Table On Link Structure \n");
 		printf("-------------------------------------------------\n");
@@ -16,73 +37,95 @@ void main(void) {
 		printf("    	  5. ListLength      11. ListDelete\n");
 		printf("    	  6. GetElem         12. ListTrabverse\n");
 		printf("    	  13. SavaData       14. LoadData\n");
-		printf("    	  0. Exit\n");
+		printf("    	  15. Changelist     0. Exit\n");
 		printf("-------------------------------------------------\n");
-		printf("    请选择你的操作[0~14]:");
+		printf("    请选择你的操作[0~15]:");
 		scanf("%d", &op);
 		switch (op) {
 		case 1:
-			if (IntiaList(L) == OK) printf("线性表初始化成功！\n");
-			else printf("线性表初始化失败！\n");
+			for (int j = 0; j < 100; j++)
+			{
+				if (lists_l[j] == NULL)
+				{
+					L_cur = j + 1;
+					break;
+				}
+			}
+			if (IntiaList(lists_l[L_cur-1]) == OK) {
+				L_all++;
+				printf("线性表新建成功！\n");
+			}
+			else printf("线性表新建失败！\n");
 			getchar(); getchar();
 			break;
 		case 2:
-			if (L!= NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
-				if (DestroyList(L) == OK) printf("线性表销毁成功！\n");
+				if (DestroyList(lists_l[L_cur - 1]) == OK) {
+					--L_all;
+					for (int j = 0; j < 100; j++)
+					{
+						if (lists_l[j] != NULL)
+						{
+							L_cur = j + 1;
+							break;
+						}
+					}
+					printf("线性表销毁成功！\n");
+				}
 				else printf("线性表销毁失败！\n");
 			}
 			else printf("该表不存在！\n");
 			getchar(); getchar();
 			break;
 		case 3:
-			if (L!= NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
-				if (ClearList(L) == OK) printf("线性表清空成功！\n");
+				if (ClearList(lists_l[L_cur - 1]) == OK) printf("线性表清空成功！\n");
 				else printf("线性表清空失败！\n");
 			}
 			else printf("该表不存在！\n");
 			getchar(); getchar();
 			break;
 		case 4:
-			if (L!= NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
-				if (ListEmpty(L) == TRUE) printf("该表为空表！\n");
+				if (ListEmpty(lists_l[L_cur - 1]) == TRUE) printf("该表为空表！\n");
 				else printf("该表不为空！\n");
 			}
 			else printf("该表不存在！\n");
 			getchar(); getchar();
 			break;
 		case 5:
-			if (L!= NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
 				int i = 0;
-				i = ListLength(L);
+				i = ListLength(lists_l[L_cur - 1]);
 				printf("该表的长度为 %d\n", i);
 			}
 			else printf("该表不存在！\n");
 			getchar(); getchar();
 			break;
 		case 6:
-			if (L!= NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
 				int i = 0;
 				ElemType e = 0;
 				printf("请输入你想知道第几个元素的值：\n");
 				scanf_s("%d", &i);
-				if (GetElem(L, i, e) == OK) printf("该表中第%d个元素为%d!\n", i, e);
+				if (GetElem(lists_l[L_cur - 1], i, e) == OK) printf("该表中第%d个元素为%d!\n", i, e);
 				else printf("输入错误，该表没有第%d个元素！\n", i);
 			}
 			else printf("该表不存在！\n");
 			getchar(); getchar();
 			break;
 		case 7:
-			if (L!= NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
 				ElemType x = 0;
 				printf("请输入你想查找的元素：\n");
 				scanf_s("%d", &x);
-				int i = LocateElem(L, x);
+				int i = LocateElem(lists_l[L_cur - 1], x);
 				if (i != 0) printf("该元素存在，且在该表中为第%d位！\n", i);
 				else printf("该元素在此表中不存在！\n");
 			}
@@ -90,31 +133,31 @@ void main(void) {
 			getchar(); getchar();
 			break;
 		case 8:
-			if (L != NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
 				ElemType pre_e = 0, cur_e = 0;
 				printf("请输入你想要获得前驱的元素：\n");
 				scanf_s("%d", &cur_e);
-				if (PriorElem(L, cur_e, pre_e) == OK) printf("前驱元素为%d\n", pre_e);
+				if (PriorElem(lists_l[L_cur - 1], cur_e, pre_e) == OK) printf("前驱元素为%d\n", pre_e);
 				else printf("输入错误，请重新输入！\n");
 			}
 			else printf("该表不存在！\n");
 			getchar(); getchar();
 			break;
 		case 9:
-			if (L != NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
 				ElemType cur_e = 0, next_e = 0;
 				printf("请输入你想要获得后继的元素：\n");
 				scanf_s("%d", &cur_e);
-				if (NextElem(L, cur_e, next_e) == OK) printf("后继元素为%d\n", next_e);
+				if (NextElem(lists_l[L_cur - 1], cur_e, next_e) == OK) printf("后继元素为%d\n", next_e);
 				else printf("输入错误，请重新输入！\n");
 			}
 			else printf("该表不存在！\n");
 			getchar(); getchar();
 			break;
 		case 10:
-			if (L != NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
 				int i = 0;
 				ElemType e = 0;
@@ -122,21 +165,21 @@ void main(void) {
 				scanf_s("%d", &i);
 				printf("请输入你想要插入的元素：\n");
 				scanf_s("%d", &e);
-				if (ListInsert(L, i, e) == OK) printf("插入成功！\n");
+				if (ListInsert(lists_l[L_cur - 1], i, e) == OK) printf("插入成功！\n");
 				else printf("插入失败！\n");
 			}
 			else printf("该表不存在！\n");
 			getchar(); getchar();
 			break;
 		case 11:
-			if (L != NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
-				if (ListLength(L) != 0) {
+				if (ListLength(lists_l[L_cur - 1]) != 0) {
 					int i = 0;
 					ElemType e = 0;
 					printf("请输入你想要删除的元素的位置：\n");
 					scanf_s("%d", &i);
-					if (ListDelete(L, i, e) == OK) printf("删除成功，且删除的元素为%d！\n", e);
+					if (ListDelete(lists_l[L_cur - 1], i, e) == OK) printf("删除成功，且删除的元素为%d！\n", e);
 					else printf("删除失败！\n");
 				}
 				else printf("该表为空表！\n");
@@ -145,9 +188,9 @@ void main(void) {
 			getchar(); getchar();
 			break;
 		case 12:
-			if (L != NULL)
+			if (lists_l[L_cur - 1] != NULL)
 			{
-				if (!ListTrabverse(L)) printf("线性表是空表！\n");
+				if (!ListTrabverse(lists_l[L_cur - 1])) printf("线性表是空表！\n");
 			}
 			else printf("该表不存在！\n");
 			getchar(); getchar();
@@ -155,15 +198,25 @@ void main(void) {
 		case 13:
 			printf("请输入文件名：\n");
 			scanf("%s", filename);
-			if (Save_data(L,filename) == OK)printf("文件数据保存成功！\n");
+			if (Save_data(lists_l[L_cur - 1],filename) == OK)printf("文件数据保存成功！\n");
 			else printf("文件数据保存失败！\n");
 			getchar(); getchar();
 			break;
 		case 14:
 			printf("请输入文件名：\n");
 			scanf("%s", filename);
-			if (Load_data(L,filename) == OK)printf("文件数据加载成功！\n");
+			if (Load_data(lists_l[L_cur - 1],filename) == OK)printf("文件数据加载成功！\n");
 			else printf("文件数据加载失败！\n");
+			getchar(); getchar();
+			break;
+		case 15:
+			printf("请输入需要当前需要进行操作的表：\n");
+			scanf("%d",&L_cur);
+			if (lists_l[L_cur - 1] == NULL) {
+				L_cur = 0;
+				printf("未创建该表！\n");
+			}
+			else ChangeList(lists_l[L_cur - 1],lists_l, L_cur);
 			getchar(); getchar();
 			break;
 		case 0:
@@ -172,6 +225,8 @@ void main(void) {
 
 	}//end of while
 	printf("欢迎下次再使用本系统！\n");
+	printf("按任意键继续...\n");
+	_getch();
 }//end of main()
 status IntiaList(LinkList& L)
 {
@@ -190,6 +245,7 @@ status DestroyList(LinkList & L)
 		free(P);
 		P = Tmp;
 	}
+	L = NULL;
 	return OK;
 }
 status ClearList(LinkList &L)
@@ -373,7 +429,8 @@ status MakeEmpty(LinkList *l)
 	}
 	return OK;
 }
-LinkList ChangeList(LinkList *lists_l, int i)
+status ChangeList(LinkList &L, LinkList *lts_l, int i)
 {
-
+	L= lists_l[i-1];
+	return OK;
 }
