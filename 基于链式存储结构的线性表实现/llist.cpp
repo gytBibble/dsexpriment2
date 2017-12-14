@@ -216,7 +216,6 @@ void main(void) {
 				L_cur = 0;
 				printf("未创建该表！\n");
 			}
-			else ChangeList(lists_l[L_cur - 1],lists_l, L_cur);
 			getchar(); getchar();
 			break;
 		case 0:
@@ -427,10 +426,5 @@ status MakeEmpty(LinkList *l)
 	{
 		l[i] = NULL;
 	}
-	return OK;
-}
-status ChangeList(LinkList &L, LinkList *lts_l, int i)
-{
-	L= lists_l[i-1];
 	return OK;
 }

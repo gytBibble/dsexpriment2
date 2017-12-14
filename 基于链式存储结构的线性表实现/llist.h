@@ -41,5 +41,4 @@ status Load_data(LinkList &L,char *filename);
 status Save_data(LinkList L,char *filename);
 /*多表操作函数*/
 status MakeEmpty(LinkList *l);//初始化数组
-status ChangeList(LinkList &L, LinkList *lts_l, int i);//改变当前操作表
 
